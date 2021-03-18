@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:numbers_trivia/core/error/failures.dart';
 import 'package:numbers_trivia/core/usecases/usecases.dart';
 import 'package:numbers_trivia/features/number_trivia/domain/entities/number_trivia.dart';
