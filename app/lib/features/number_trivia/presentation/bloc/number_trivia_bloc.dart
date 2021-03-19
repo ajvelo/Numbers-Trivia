@@ -2,22 +2,20 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:numbers_trivia/core/error/failures.dart';
-import 'package:numbers_trivia/core/presentation/util/input_converter.dart';
-import 'package:numbers_trivia/core/usecases/usecases.dart';
+import 'package:numbers_trivia/core/usecases/usecase.dart';
 import 'package:numbers_trivia/features/number_trivia/domain/entities/number_trivia.dart';
-import 'package:numbers_trivia/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
-import 'package:numbers_trivia/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
 
-part 'number_trivia_event.dart';
-part 'number_trivia_state.dart';
+import './bloc.dart';
+import '../../../../core/util/input_converter.dart';
+import '../../domain/usecases/get_concrete_number_trivia.dart';
+import '../../domain/usecases/get_random_number_trivia.dart';
 
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 const String INVALID_INPUT_FAILURE_MESSAGE =
-    'Invalid Input - The number must be a positive integer or zero';
+    'Invalid Input - The number must be a positive integer or zero.';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia getConcreteNumberTrivia;
@@ -33,8 +31,9 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         assert(inputConverter != null),
         getConcreteNumberTrivia = concrete,
         getRandomNumberTrivia = random,
-        super(null);
+        super(Empty());
 
+  @override
   NumberTriviaState get initialState => Empty();
 
   @override
@@ -52,13 +51,13 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         (integer) async* {
           yield Loading();
           final failureOrTrivia =
-              await getConcreteNumberTrivia(params: Params(number: integer));
+              await getConcreteNumberTrivia(Params(number: integer));
           yield* _eitherLoadedOrErrorState(failureOrTrivia);
         },
       );
     } else if (event is GetTriviaForRandomNumber) {
       yield Loading();
-      final failureOrTrivia = await getRandomNumberTrivia(params: NoParams());
+      final failureOrTrivia = await getRandomNumberTrivia(NoParams());
       yield* _eitherLoadedOrErrorState(failureOrTrivia);
     }
   }
