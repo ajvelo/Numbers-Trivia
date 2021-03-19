@@ -35,7 +35,6 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         getRandomNumberTrivia = random,
         super(null);
 
-  @override
   NumberTriviaState get initialState => Empty();
 
   @override
